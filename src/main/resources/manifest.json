@@ -1,0 +1,20 @@
+{
+  "Group": "com.example",
+  "Name": "HUD Ensemble",
+  "Version": "1.0.0",
+  "Description": "Allows multiple CustomUIHud overlays to be stacked simultaneously.",
+  "Authors": [
+    {
+      "Name": "Hatoka"
+    }
+  ],
+  "ServerVersion": "*",
+  "Dependencies": {
+    "Hytale:EntityModule": "*"
+  },
+  "OptionalDependencies": {},
+  "DisabledByDefault": false,
+  "Main": "com.example.hudensemble.HudEnsemblePlugin",
+  "LoadOrder": "POSTWORLD",
+  "IncludesAssetPack": true
+}

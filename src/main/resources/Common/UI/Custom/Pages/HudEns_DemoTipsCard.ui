@@ -1,0 +1,38 @@
+Group {
+  Anchor: (Width: 360, Height: 140, Bottom: 22, Left: 18);
+  Background: #141c26(0.70);
+  LayoutMode: Top;
+  Padding: (Full: 12);
+
+  Label {
+    Text: "Layer 3: Tips";
+    Anchor: (Height: 22);
+    Style: (FontSize: 14, TextColor: #ffffff, RenderBold: true);
+  }
+
+  Group { Anchor: (Height: 1); Background: #2b3542(0.8); }
+  Group { Anchor: (Height: 8); }
+
+  Label {
+    Text: "• This mod stacks multiple CustomUIHud layers";
+    Anchor: (Height: 18);
+    Style: (FontSize: 12, TextColor: #96a9be);
+  }
+  Label {
+    Text: "• /hudens demo opens an interactive overlay page";
+    Anchor: (Height: 18);
+    Style: (FontSize: 12, TextColor: #96a9be);
+  }
+  Label {
+    Text: "• /hudens clean removes the demo layers";
+    Anchor: (Height: 18);
+    Style: (FontSize: 12, TextColor: #96a9be);
+  }
+
+  Group { Anchor: (Height: 8); }
+  Label {
+    Text: "(HUD elements themselves aren't clickable — the overlay page is)";
+    Anchor: (Height: 16);
+    Style: (FontSize: 10, TextColor: #6e7da1);
+  }
+}

@@ -1,0 +1,31 @@
+Group {
+  Anchor: (Width: 270, Height: 120, Top: 18, Right: 18);
+  Background: #141c26(0.70);
+  LayoutMode: Top;
+  Padding: (Full: 12);
+
+  Label {
+    Text: "Layer 2: Status Card";
+    Anchor: (Height: 22);
+    Style: (FontSize: 14, TextColor: #ffffff, RenderBold: true);
+  }
+
+  Group { Anchor: (Height: 1); Background: #2b3542(0.8); }
+  Group { Anchor: (Height: 8); }
+
+  Label {
+    Text: "HUDs active: 4";
+    Anchor: (Height: 18);
+    Style: (FontSize: 12, TextColor: #96a9be);
+  }
+  Label {
+    Text: "Command: /hudens clean";
+    Anchor: (Height: 18);
+    Style: (FontSize: 12, TextColor: #96a9be);
+  }
+  Label {
+    Text: "Next step: expose an API";
+    Anchor: (Height: 18);
+    Style: (FontSize: 12, TextColor: #6e7da1);
+  }
+}

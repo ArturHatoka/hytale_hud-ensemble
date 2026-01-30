@@ -1,0 +1,5 @@
+Label {
+  Text: "HudEnsemble • demo";
+  Anchor: (Width: 180, Height: 18, Bottom: 8, Right: 10);
+  Style: (FontSize: 12, TextColor: #6e7da1, HorizontalAlignment: End);
+}

@@ -1,0 +1,70 @@
+// HudEnsemble Demo Overlay UI
+$C = "../Common.ui";
+
+@PrimaryButton = TextButtonStyle(
+  Default: (Background: #3a7bd5, LabelStyle: (FontSize: 14, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+  Hovered: (Background: #4a8be5, LabelStyle: (FontSize: 14, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+  Pressed: (Background: #2a6bc5, LabelStyle: (FontSize: 14, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center))
+);
+
+@SecondaryButton = TextButtonStyle(
+  Default: (Background: #2b3542, LabelStyle: (FontSize: 14, TextColor: #96a9be, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+  Hovered: (Background: #3b4552, LabelStyle: (FontSize: 14, TextColor: #b6c9de, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+  Pressed: (Background: #1b2532, LabelStyle: (FontSize: 14, TextColor: #96a9be, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center))
+);
+
+Group {
+  Anchor: (Width: 420, Height: 220);
+  Background: #141c26(0.98);
+  LayoutMode: Top;
+  Padding: (Full: 18);
+
+  Label {
+    Text: "HudEnsemble Demo";
+    Anchor: (Height: 38);
+    Style: (FontSize: 22, TextColor: #ffffff, HorizontalAlignment: Center, RenderBold: true);
+  }
+
+  Group { Anchor: (Height: 1); Background: #2b3542; }
+  Group { Anchor: (Height: 12); }
+
+  Label {
+    Text: "Click the button to write a message into chat.";
+    Anchor: (Height: 24);
+    Style: (FontSize: 14, TextColor: #96a9be, HorizontalAlignment: Center);
+  }
+
+  Label #DemoOverlayStatusText {
+    Text: "Ready";
+    Anchor: (Height: 24);
+    Style: (FontSize: 14, TextColor: #6e7da1, HorizontalAlignment: Center);
+  }
+
+  Group { FlexWeight: 1; }
+
+  Group {
+    LayoutMode: Center;
+    Anchor: (Height: 50);
+
+    TextButton #DemoOverlayHelloButton {
+      Text: "Say: Hello, hud ensemble!";
+      Anchor: (Width: 220, Height: 42);
+      Style: @PrimaryButton;
+    }
+
+    Group { Anchor: (Width: 12); }
+
+    TextButton #DemoOverlayCloseButton {
+      Text: "Close";
+      Anchor: (Width: 100, Height: 42);
+      Style: @SecondaryButton;
+    }
+  }
+
+  Group { Anchor: (Height: 8); }
+  Label {
+    Text: "ESC also dismisses this overlay";
+    Anchor: (Height: 16);
+    Style: (FontSize: 11, TextColor: #555555, HorizontalAlignment: Center);
+  }
+}

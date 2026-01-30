@@ -1,0 +1,38 @@
+$C = "../Common.ui";
+
+@HelloButtonStyle = TextButtonStyle(
+  Default: (Background: #3a7bd5, LabelStyle: (FontSize: 14, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+  Hovered: (Background: #4a8be5, LabelStyle: (FontSize: 14, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+  Pressed: (Background: #2a6bc5, LabelStyle: (FontSize: 14, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center)),
+
+  Sounds: $C.@ButtonSounds
+);
+
+Group {
+  Anchor: (Width: 300, Height: 110, Top: 80, Left: 30);
+  Background: #141c26(0.70);
+  LayoutMode: Top;
+  Padding: (Full: 12);
+
+  Label {
+    Text: "Layer 1: Button (visual)";
+    Anchor: (Height: 20);
+    Style: (FontSize: 12, TextColor: #96a9be);
+  }
+
+  Group { Anchor: (Height: 8); }
+
+  TextButton #HelloButton {
+    Text: "Hello, hud ensemble!";
+    Anchor: (Width: 276, Height: 44);
+    Style: @HelloButtonStyle;
+  }
+
+  Group { Anchor: (Height: 8); }
+
+  Label {
+    Text: "(Clicking works in the overlay page opened by /hudens demo)";
+    Anchor: (Height: 16);
+    Style: (FontSize: 10, TextColor: #6e7da1);
+  }
+}
