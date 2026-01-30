@@ -6,9 +6,12 @@ package com.example.hudensemble.api;
 public final class HudEnsembleVersion {
 
     /**
-     * Increments when the public API makes a breaking change.
+     * API surface version.
+     *
+     * <p>This value is incremented whenever the public API gains new capabilities or
+     * changes in a way that API consumers may depend on.
      */
-    public static final int API_VERSION = 2;
+    public static final int API_VERSION = 4;
 
     private HudEnsembleVersion() {
     }
