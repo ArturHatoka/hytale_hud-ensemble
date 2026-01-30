@@ -15,6 +15,11 @@ import javax.annotation.Nonnull;
 public final class HudEnsembleServiceImpl implements HudEnsembleService {
 
     @Override
+    public int getApiVersion() {
+        return com.example.hudensemble.api.HudEnsembleVersion.API_VERSION;
+    }
+
+    @Override
     public void setLayer(
             @Nonnull Player player,
             @Nonnull PlayerRef playerRef,

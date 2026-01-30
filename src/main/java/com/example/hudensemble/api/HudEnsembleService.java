@@ -17,6 +17,13 @@ import javax.annotation.Nonnull;
 public interface HudEnsembleService {
 
     /**
+     * API version of this service. Consumers can use this for compatibility checks.
+     */
+    default int getApiVersion() {
+        return HudEnsembleVersion.API_VERSION;
+    }
+
+    /**
      * Adds (or replaces) a named HUD layer for the player.
      *
      * @param player the target player
