@@ -28,7 +28,8 @@ public interface HudEnsembleService {
      *
      * @param player the target player
      * @param playerRef the player's ref (required by HudManager/CustomUIHud)
-     * @param layerId stable identifier for this layer within a single player
+     * @param layerId stable identifier for this layer within a single player.
+     *                Must satisfy {@link HudEnsembleValidation#requireValidLayerId(String)}.
      * @param hud the HUD to render inside this layer
      */
     void setLayer(

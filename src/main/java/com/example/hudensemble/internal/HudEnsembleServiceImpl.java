@@ -3,6 +3,7 @@ package com.example.hudensemble.internal;
 import com.example.hudensemble.hudens.MultipleCustomUIHud;
 import com.example.hudensemble.api.HudEnsembleClient;
 import com.example.hudensemble.api.HudEnsembleService;
+import com.example.hudensemble.api.HudEnsembleValidation;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
@@ -26,6 +27,8 @@ public final class HudEnsembleServiceImpl implements HudEnsembleService {
             @Nonnull String layerId,
             @Nonnull CustomUIHud hud
     ) {
+        HudEnsembleValidation.requireValidLayerId(layerId);
+
         // If the reflection bridge is unavailable, we can't stack HUDs safely.
         if (!MultipleCustomUIHud.isCompositionSupported()) {
             player.getHudManager().setCustomHud(playerRef, hud);
@@ -50,6 +53,8 @@ public final class HudEnsembleServiceImpl implements HudEnsembleService {
 
     @Override
     public void removeLayer(@Nonnull Player player, @Nonnull String layerId) {
+        HudEnsembleValidation.requireValidLayerId(layerId);
+
         CustomUIHud currentCustomHud = player.getHudManager().getCustomHud();
         if (currentCustomHud instanceof MultipleCustomUIHud multipleCustomUIHud) {
             multipleCustomUIHud.remove(layerId);
@@ -91,6 +96,8 @@ public final class HudEnsembleServiceImpl implements HudEnsembleService {
                 @Nonnull String layerId,
                 @Nonnull CustomUIHud hud
         ) {
+            HudEnsembleValidation.requireValidLayerId(layerId);
+
             String key = namespaced(layerId);
             synchronized (layersByPlayer) {
                 layersByPlayer
@@ -102,6 +109,8 @@ public final class HudEnsembleServiceImpl implements HudEnsembleService {
 
         @Override
         public void removeLayer(@Nonnull Player player, @Nonnull String layerId) {
+            HudEnsembleValidation.requireValidLayerId(layerId);
+
             String key = namespaced(layerId);
             synchronized (layersByPlayer) {
                 var set = layersByPlayer.get(player);
