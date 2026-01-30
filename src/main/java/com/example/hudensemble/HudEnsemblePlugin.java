@@ -24,7 +24,7 @@ public class HudEnsemblePlugin extends JavaPlugin implements HudEnsembleApi {
     private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
     private static HudEnsemblePlugin instance;
 
-    private final HudEnsembleService service = new HudEnsembleServiceImpl();
+    private final HudEnsembleServiceImpl service = new HudEnsembleServiceImpl();
 
     public static HudEnsemblePlugin getInstance() {
         return instance;
@@ -83,6 +83,14 @@ public class HudEnsemblePlugin extends JavaPlugin implements HudEnsembleApi {
     @Override
     protected void shutdown() {
         LOGGER.at(Level.INFO).log("[HudEnsemble] Shutting down...");
+
+        try {
+            service.cleanupOnPluginShutdown();
+            LOGGER.at(Level.INFO).log("[HudEnsemble] Detached multiplexed HUDs from tracked players");
+        } catch (Exception e) {
+            LOGGER.at(Level.WARNING).withCause(e).log("[HudEnsemble] Shutdown cleanup failed");
+        }
+
         instance = null;
     }
 

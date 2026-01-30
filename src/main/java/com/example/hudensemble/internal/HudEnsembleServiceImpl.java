@@ -15,6 +15,14 @@ import javax.annotation.Nonnull;
  */
 public final class HudEnsembleServiceImpl implements HudEnsembleService {
 
+    /**
+     * Tracks players that have had their CustomUIHud wrapped in {@link MultipleCustomUIHud}.
+     *
+     * <p>This is used only for HudEnsemble plugin shutdown cleanup, to ensure we detach the
+     * wrapper (which lives in this plugin's classloader) from any still-connected players.
+     */
+    private final java.util.Map<Player, PlayerRef> touchedPlayers = new java.util.WeakHashMap<>();
+
     @Override
     public int getApiVersion() {
         return com.example.hudensemble.api.HudEnsembleVersion.API_VERSION;
@@ -28,6 +36,11 @@ public final class HudEnsembleServiceImpl implements HudEnsembleService {
             @Nonnull CustomUIHud hud
     ) {
         HudEnsembleValidation.requireValidLayerId(layerId);
+
+        // Remember that this player was touched by HudEnsemble so we can detach the wrapper on shutdown.
+        synchronized (touchedPlayers) {
+            touchedPlayers.put(player, playerRef);
+        }
 
         // If the reflection bridge is unavailable, we can't stack HUDs safely.
         if (!MultipleCustomUIHud.isCompositionSupported()) {
@@ -47,7 +60,7 @@ public final class HudEnsembleServiceImpl implements HudEnsembleService {
         mchud.add(layerId, hud);
 
         if (currentCustomHud != null) {
-            mchud.add("Unknown", currentCustomHud);
+            mchud.add(MultipleCustomUIHud.PRESERVED_BASE_HUD_LAYER_ID, currentCustomHud);
         }
     }
 
@@ -64,12 +77,46 @@ public final class HudEnsembleServiceImpl implements HudEnsembleService {
     @Nonnull
     @Override
     public HudEnsembleClient createClient(@Nonnull String ownerNamespace) {
-        return new NamespacedHudEnsembleClient(this, ownerNamespace);
+        String ns = HudEnsembleValidation.requireValidOwnerNamespace(ownerNamespace);
+        return new NamespacedHudEnsembleClient(this, ns);
     }
 
     @Override
     public boolean isCompositionSupported() {
         return MultipleCustomUIHud.isCompositionSupported();
+    }
+
+    /**
+     * Detaches {@link MultipleCustomUIHud} from any tracked players.
+     *
+     * <p>Important for hot-reloading HudEnsemble: leaving a {@link MultipleCustomUIHud} instance
+     * attached would keep this plugin's classes reachable from the server.
+     */
+    public void cleanupOnPluginShutdown() {
+        java.util.Map<Player, PlayerRef> snapshot;
+        synchronized (touchedPlayers) {
+            snapshot = new java.util.HashMap<>(touchedPlayers);
+            touchedPlayers.clear();
+        }
+
+        for (var entry : snapshot.entrySet()) {
+            Player player = entry.getKey();
+            PlayerRef playerRef = entry.getValue();
+            if (player == null || playerRef == null) continue;
+
+            try {
+                CustomUIHud current = player.getHudManager().getCustomHud();
+                if (!(current instanceof MultipleCustomUIHud multiple)) {
+                    continue;
+                }
+
+                CustomUIHud preserved = multiple.getLayerOrNull(MultipleCustomUIHud.PRESERVED_BASE_HUD_LAYER_ID);
+                // The HUD system supports clearing custom HUDs by passing null.
+                player.getHudManager().setCustomHud(playerRef, preserved);
+            } catch (Throwable ignored) {
+                // Best-effort cleanup only.
+            }
+        }
     }
 
     /**
@@ -86,7 +133,7 @@ public final class HudEnsembleServiceImpl implements HudEnsembleService {
 
         private NamespacedHudEnsembleClient(@Nonnull HudEnsembleService service, @Nonnull String ownerNamespace) {
             this.service = service;
-            this.namespace = ownerNamespace;
+            this.namespace = HudEnsembleValidation.requireValidOwnerNamespace(ownerNamespace);
         }
 
         @Override

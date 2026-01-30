@@ -2,25 +2,21 @@ package com.example.hudensemble.api;
 
 import javax.annotation.Nonnull;
 
-/**
- * Validation helpers for public API inputs.
- */
+/** Validation helpers for public API inputs. */
 public final class HudEnsembleValidation {
 
-    /**
-     * Practical upper bound to prevent accidentally unbounded identifiers.
-     *
-     * <p>Note: the internal UI id is always normalized and hashed, so this limit exists mainly to
-     * protect logs, maps, and user error cases.</p>
-     */
+    /** Upper bound to prevent accidentally unbounded identifiers. */
     public static final int MAX_LAYER_ID_LENGTH = 1024;
 
-    private HudEnsembleValidation() {}
+    /** Upper bound for owner namespaces used for namespacing layer ids. */
+    public static final int MAX_OWNER_NAMESPACE_LENGTH = 256;
+
+    private HudEnsembleValidation() {
+    }
 
     /**
      * Ensures the supplied layer id is usable.
      *
-     * <p>Rules:
      * <ul>
      *   <li>Must not be {@code null}</li>
      *   <li>Must not be blank (after trimming)</li>
@@ -47,5 +43,43 @@ public final class HudEnsembleValidation {
         }
 
         return layerId;
+    }
+
+    /**
+     * Ensures the supplied owner namespace is usable.
+     *
+     * <p>The owner namespace is used to prefix your layer ids to avoid collisions with other plugins.
+     * It may contain spaces and punctuation, but control characters are rejected.</p>
+     */
+    @Nonnull
+    public static String requireValidOwnerNamespace(@Nonnull String ownerNamespace) {
+        if (ownerNamespace == null) {
+            throw new IllegalArgumentException("ownerNamespace must not be null");
+        }
+
+        String trimmed = ownerNamespace.trim();
+        if (trimmed.isEmpty()) {
+            throw new IllegalArgumentException("ownerNamespace must not be blank");
+        }
+
+        int len = trimmed.length();
+        if (len > MAX_OWNER_NAMESPACE_LENGTH) {
+            throw new IllegalArgumentException(
+                    "ownerNamespace length must be <= " + MAX_OWNER_NAMESPACE_LENGTH + " (was " + len + ")"
+            );
+        }
+
+        requireNoControlChars(trimmed, "ownerNamespace");
+        return trimmed;
+    }
+
+    private static void requireNoControlChars(@Nonnull String value, @Nonnull String paramName) {
+        for (int i = 0; i < value.length(); i++) {
+            char c = value.charAt(i);
+            // Reject C0 controls and DEL.
+            if (c < 0x20 || c == 0x7F) {
+                throw new IllegalArgumentException(paramName + " must not contain control characters");
+            }
+        }
     }
 }

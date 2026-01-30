@@ -6,6 +6,7 @@ import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -20,6 +21,13 @@ import java.util.Map;
  * </ul>
  */
 public final class MultipleCustomUIHud extends CustomUIHud {
+
+    /**
+     * Internal layer id used to preserve a pre-existing CustomUIHud when we first wrap it.
+     *
+     * <p>Kept for backward compatibility with older versions that hardcoded the id.
+     */
+    public static final String PRESERVED_BASE_HUD_LAYER_ID = "Unknown";
 
     private static final boolean CAN_COMPOSE_LAYERS =
             CustomHudBuildBridge.isAvailable() && UiCommandListAccess.isAvailable();
@@ -87,6 +95,17 @@ public final class MultipleCustomUIHud extends CustomUIHud {
         UICommandBuilder commandBuilder = new UICommandBuilder();
         commandBuilder.remove(HudEnsembleUi.ROOT_SELECTOR + " #" + normalizedId);
         update(false, commandBuilder);
+    }
+
+    /**
+     * Returns the HUD stored under the given identifier, or null if not present.
+     *
+     * <p>Intended primarily for shutdown cleanup, so HudEnsemble can restore the base HUD
+     * and detach this wrapper from the player's HudManager.
+     */
+    @Nullable
+    public CustomUIHud getLayerOrNull(@Nonnull String identifier) {
+        return layers.get(identifier);
     }
 
     private static void buildLayer(

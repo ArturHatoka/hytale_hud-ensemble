@@ -56,7 +56,8 @@ public interface HudEnsembleService {
      * <p><b>Lifecycle contract:</b> store the returned client and call {@link HudEnsembleClient#close()} in your
      * plugin's {@code shutdown()} to remove your HUD layers when your plugin unloads.</p>
      *
-     * @param ownerNamespace stable namespace for your plugin, e.g. {@code "MyGroup:MyPlugin"}
+     * @param ownerNamespace stable namespace for your plugin, e.g. {@code "MyGroup:MyPlugin"}.
+     *                       Must satisfy {@link HudEnsembleValidation#requireValidOwnerNamespace(String)}.
      */
     @Nonnull
     HudEnsembleClient createClient(@Nonnull String ownerNamespace);
