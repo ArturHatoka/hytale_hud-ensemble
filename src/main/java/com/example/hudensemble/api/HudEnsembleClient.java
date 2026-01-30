@@ -2,9 +2,11 @@ package com.example.hudensemble.api;
 
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
+import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 
 import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
 /**
  * Per-consumer handle for interacting with {@link HudEnsembleService}.
@@ -25,6 +27,20 @@ public interface HudEnsembleClient extends AutoCloseable {
     );
 
     void removeLayer(@Nonnull Player player, @Nonnull String layerId);
+
+    /**
+     * Applies incremental UI commands to an existing layer owned by this client.
+     *
+     * <p>The provided {@code updater} receives a {@link UICommandBuilder} whose selectors are
+     * automatically scoped to the target layer.</p>
+     *
+     * <p>If the layer doesn't exist, this is a no-op.</p>
+     */
+    void updateLayer(
+            @Nonnull Player player,
+            @Nonnull String layerId,
+            @Nonnull Consumer<UICommandBuilder> updater
+    );
 
     /** Removes all layers created by this client for the given player. */
     void clear(@Nonnull Player player);

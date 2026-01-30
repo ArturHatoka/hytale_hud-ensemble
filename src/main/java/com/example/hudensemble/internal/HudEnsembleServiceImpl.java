@@ -6,12 +6,14 @@ import com.example.hudensemble.api.HudEnsembleService;
 import com.example.hudensemble.api.HudEnsembleValidation;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
+import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 
 import javax.annotation.Nonnull;
 import java.lang.ref.Cleaner;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 /**
  * Default implementation of {@link HudEnsembleService}.
@@ -74,6 +76,21 @@ public final class HudEnsembleServiceImpl implements HudEnsembleService {
         CustomUIHud currentCustomHud = player.getHudManager().getCustomHud();
         if (currentCustomHud instanceof MultipleCustomUIHud multipleCustomUIHud) {
             multipleCustomUIHud.remove(layerId);
+        }
+    }
+
+
+    @Override
+    public void updateLayer(
+            @Nonnull Player player,
+            @Nonnull String layerId,
+            @Nonnull Consumer<UICommandBuilder> updater
+    ) {
+        HudEnsembleValidation.requireValidLayerId(layerId);
+
+        CustomUIHud currentCustomHud = player.getHudManager().getCustomHud();
+        if (currentCustomHud instanceof MultipleCustomUIHud multipleCustomUIHud) {
+            multipleCustomUIHud.updateLayer(layerId, updater);
         }
     }
 
@@ -169,6 +186,19 @@ public final class HudEnsembleServiceImpl implements HudEnsembleService {
             String key = namespaced(layerId);
             cleanupState.unrecordLayer(player, key);
             service.removeLayer(player, key);
+        }
+
+        @Override
+        public void updateLayer(
+                @Nonnull Player player,
+                @Nonnull String layerId,
+                @Nonnull Consumer<UICommandBuilder> updater
+        ) {
+            ensureOpen();
+            HudEnsembleValidation.requireValidLayerId(layerId);
+
+            String key = namespaced(layerId);
+            service.updateLayer(player, key, updater);
         }
 
         @Override

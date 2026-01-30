@@ -8,7 +8,7 @@ public final class HudEnsembleVersion {
     /**
      * Increments when the public API makes a breaking change.
      */
-    public static final int API_VERSION = 1;
+    public static final int API_VERSION = 2;
 
     private HudEnsembleVersion() {
     }

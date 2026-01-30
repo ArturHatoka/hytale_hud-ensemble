@@ -3,9 +3,11 @@ package com.example.hudensemble.api;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.hud.CustomUIHud;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
+import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 
 import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
 /**
  * Public API for managing multiple {@link CustomUIHud} layers per player.
@@ -43,6 +45,21 @@ public interface HudEnsembleService {
      * Removes a previously added HUD layer by its identifier.
      */
     void removeLayer(@Nonnull Player player, @Nonnull String layerId);
+
+    /**
+     * Applies incremental UI commands to an existing layer.
+     *
+     * <p>The provided {@code updater} receives a {@link UICommandBuilder} whose selectors are
+     * automatically scoped to the target layer, so you can address elements relative to the
+     * layer root.</p>
+     *
+     * <p>If the layer doesn't exist (or composition is unsupported), this is a no-op.</p>
+     */
+    void updateLayer(
+            @Nonnull Player player,
+            @Nonnull String layerId,
+            @Nonnull Consumer<UICommandBuilder> updater
+    );
 
     /**
      * Creates a client handle for a specific consumer plugin (or subsystem).

@@ -9,6 +9,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * A {@link CustomUIHud} wrapper that can host multiple HUDs at once.
@@ -95,6 +96,23 @@ public final class MultipleCustomUIHud extends CustomUIHud {
         UICommandBuilder commandBuilder = new UICommandBuilder();
         commandBuilder.remove(HudEnsembleUi.ROOT_SELECTOR + " #" + normalizedId);
         update(false, commandBuilder);
+    }
+
+    /**
+     * Applies incremental UI commands to an existing layer.
+     *
+     * <p>The provided {@code updater} receives a {@link UICommandBuilder} whose selectors are
+     * scoped to this layer.</p>
+     */
+    public void updateLayer(@Nonnull String identifier, @Nonnull Consumer<UICommandBuilder> updater) {
+        if (!CAN_COMPOSE_LAYERS) return;
+
+        String normalizedId = normalizedIds.getIfPresent(identifier);
+        if (normalizedId == null) return;
+
+        PrefixedUICommandBuilder layerBuilder = new PrefixedUICommandBuilder(normalizedId);
+        updater.accept(layerBuilder);
+        update(false, layerBuilder);
     }
 
     /**
